@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Spring Security Example</title>
+    </head>
+    <body>
+
+        <div th:if="${#httpServletRequest.remoteUser}!=null">
+            <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Sign Out"/>
+            </form>
+        </div>
+
+
+        <div th:unless="${#httpServletRequest.remoteUser}!=null">
+            <h1>Hello friend!</h1>
+            <p>Click <a th:href="@{/home}">here</a> to login.</p>
+        </div>
+
+        <div><!-- Категории товаров-->
+            <p>Products category</p>
+            <!-- без аутентификации-->
+            <div>
+                <!-- Запрос всех категорий товаров-->
+                <form th:action="@{/categories}" method="get">
+                    <input type="submit" value="Get all product categories"/>
+                    <label> Page number (0..X) : <input type="Long" name="pageNumber"/></label>
+                </form>
+
+                <!-- Запрос категории товара по идентификатору-->
+                <form th:action="@{/category/get}" method="get">
+                    <input type="submit" value="Get product categories by Id"/>
+                    <label> Category Id : <input type="Long" name="id"/></label>
+                </form>
+            </div>
+
+            <!-- с аутентификацией-->
+            <div th:if="${#httpServletRequest.remoteUser}!=null">
+                <!-- Добавить новую категорию товара-->
+                <form th:action="@{/category/add}" method="post">
+                    <input type="submit" value="Add new category"/>
+                    <label> Category name : <input type="text" name="name"/></label>
+                </form>
+
+                <!-- Удалить категорию товара с заданым идентификатором-->
+                <form th:action="@{/category/del}" method="post">
+                    <input type="submit" value="Delete category by ID"/>
+                    <label> Category Id : <input type="Long" name="id"/></label>
+                </form>
+            </div>
+        </div>
+
+        <div><!-- Товары -->
+            <p>Products</p>
+            <!-- без аутентификации-->
+            <div>
+                <!-- Запрос всех товаров-->
+                <form th:action="@{/products}" method="get">
+                    <input type="submit" value="Get all products"/>
+                    <label> Page number (0..X): <input type="Long" name="pageNumber"/></label>
+                </form>
+
+                <!-- Запрос товара по идентификатору-->
+                <form th:action="@{/product/get}" method="get">
+                    <input type="submit" value="Get product by Id"/>
+                    <label> Product Id : <input type="Long" name="id"/></label>
+                </form>
+
+                <!-- Запрос товаров по категории товара-->
+                <form th:action="@{/category/products}" method="get">
+                    <input type="submit" value="Search products by category"/>
+                    <label> Category Id : <input type="Long" name="id"/></label>
+                    <label> Page number (0..X): <input type="Long" name="pageNumber"/></label>
+                </form>
+
+                <!-- Запрос товаров по категории товара и цене-->
+                <form th:action="@{/category/priceSelection}" method="get">
+                    <input type="submit" value="Search products by category and price"/>
+                    <label> Category Id : <input type="Long" name="categoryId"/></label>
+                    <label> Price : <input type="Integer" name="price"/></label>
+                    <label> Page number (0..X): <input type="Long" name="pageNumber"/></label>
+                </form>
+            </div>
+
+            <!-- с аутентификацией-->
+            <div th:if="${#httpServletRequest.remoteUser}!=null">
+                <!-- Добавить новый товар-->
+                <form th:action="@{/product/add}" method="post">
+                    <input type="submit" value="Add new product"/>
+                    <label> Category Id : <input type="Long" name="categoryId"/></label>
+                    <label> Product name : <input type="text" name="name"/></label>
+                    <label> Product price : <input type="Integer" name="price"/></label>
+                </form>
+
+                <!-- Обновить цену товара-->
+                <form th:action="@{/product/update}" method="post">
+                    <input type="submit" value="Update product price"/>
+                    <label> Product Id : <input type="Long" name="id"/></label>
+                    <label> Product price : <input type="Integer" name="price"/></label>
+                </form>
+
+                <!-- Удалить товар с заданым идентификатором-->
+                <form th:action="@{/product/del}" method="post">
+                    <input type="submit" value="Delete product by ID"/>
+                    <label> Product Id : <input type="Long" name="id"/></label>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
